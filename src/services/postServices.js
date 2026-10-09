@@ -1,4 +1,4 @@
-import {createPost} from "../repositories/postRepositories";
+import {countAllPosts, createPost} from "../repositories/postRepositories";
 export const createPostServie=async (createPostObject)=>{
     const caption=createPostObject.caption?.trim();
     const image=createPostObject.image;
@@ -16,3 +16,15 @@ export const createPostServie=async (createPostObject)=>{
 
     
 }
+ export const getAllPostService=async (offset , limit)=>{
+    const posts=await findAllPosts(offset, limit);
+
+    //calculate total number of posts and total number of pages
+    const totalDocuments=await countAllPosts();
+
+    const totalPages=Math.ceil(totalDocuments / limit);
+    return{
+        posts,totalPages, totalDocuments
+    }
+
+ }
