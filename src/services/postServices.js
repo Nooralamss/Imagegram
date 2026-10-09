@@ -1,4 +1,4 @@
-import {countAllPosts, createPost} from "../repositories/postRepositories";
+import {countAllPosts, createPost, deletePostById, updatePostById} from "../repositories/postRepositories";
 export const createPostServie=async (createPostObject)=>{
     const caption=createPostObject.caption?.trim();
     const image=createPostObject.image;
@@ -27,4 +27,15 @@ export const createPostServie=async (createPostObject)=>{
         posts,totalPages, totalDocuments
     }
 
+ }
+ export const deletePostService=async (id)=>{
+    //call the repository function
+    const response=await deletePostById(id);
+    return response;
+ }
+
+ export const updatePostService=async (id,updateObject)=>{
+    //call the repository function
+    const response=await updatePostById(id,updateObject);
+    return response;
  }
