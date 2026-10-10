@@ -7,7 +7,15 @@ export const s3uploader=multer({
     storage:multerS3({
         s3:s3,
         key:function (req,file,cb){
-            console.log(file);
+           console.log(file);
+            if (!file){
+                return cb(new Error ("file not found "));
+            }
+            //check mimetype for jpeg and png files only
+            if(file.mimetype!="image/jpeg" || file.mimetype!="image/png"){
+                return cb(new Error ("file type not supportrd"));
+            } 
+            
             const uniqueSuffix=Date.now()+ "_"+ matchMedia.round(Math.random()*1e9);
             cb(null, file.fieldname + "_"+ uniqueSuffix + "."+ file.mimetype.split("/")[1]);
             
