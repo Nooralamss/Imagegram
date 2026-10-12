@@ -1,6 +1,50 @@
-import { createUser } from "../repositories/userRepositories"
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import { createUser, findUserByEmail } from "../repositories/userRepositories"
+import { generateJwtToken } from "../utils/jwt";
 
 export const signupUserService=async (user)=>{
-    const newUser=await createUser(user);
-    return newUser;
+    // const newUser=await createUser(user);
+    // return newUser;
+    try{
+        const newUser=await createUser(user);
+        return newUser;
+
+    }
+    catch(error){
+        if(error.name==="MongoServerError" && error.code===11000){
+            throw{
+                status:400,
+                message:"User with the Same email or username already exists"
+            }
+        }
+        throw error;
+    }
 }
+
+    export const signinUserService=async (userDetails) =>{
+        try{
+            //1. check if there is a valid registered user with the email
+            const user=await findUserByEmail(userDetails.email);
+            if(!user){
+                throw {
+                    status:400,
+                    message:"User not found "
+                }
+            }
+            //2.compare the password
+            const isPasswordValid=bcrypt.compareSync(userDetails.password, user.password);
+
+            if(!isPasswordValid){
+                throw{
+                    status:401,
+                    message:"Invalid password"
+                }
+            }
+            const token =generateJwtToken({email:user.email, _id:user._id, username:user.user})
+                  return token;
+        }
+        catch(error){
+            throw error;
+        }
+    }

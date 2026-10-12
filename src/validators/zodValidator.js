@@ -1,7 +1,7 @@
 export const validate =(schema)=>{
-    return async (requestAnimationFrame,res,next)=>{
+    return async (req,res,next)=>{
         try{
-            schema.parse(requestAnimationFrame.body);
+            schema.parse(req.body);
             next();
         }
         catch (error){
