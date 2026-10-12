@@ -4,6 +4,7 @@ import connectDB from './config/DbConfig.js';
 import { postController } from './controller/postController.js';
 import apiRouter from'./routers/v1/v1Router.js';
 import multer from 'multer';
+import { isAuthenticated } from './middlewares/authMiddlewares.js';
 const PORT=5000;
 
 const app=express();
@@ -20,7 +21,9 @@ app.get('/',(req,res)=>{
     return res.send('HOME')
 })
 
-app.get('/ping',(req,res)=>{
+app.get('/ping',isAuthenticated,(req,res)=>{
+    console.log(req.user);
+    
     return res.send('pong')
 })
 
